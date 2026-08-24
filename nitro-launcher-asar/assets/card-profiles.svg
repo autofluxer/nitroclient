@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400" fill="none">
+  <rect width="640" height="400" fill="#090b0f"/>
+  <defs>
+    <linearGradient id="beam" x1="320" y1="40" x2="320" y2="360" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.55"/>
+      <stop offset="55%" stop-color="#3b82f6" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="72%" r="38%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#090b0f" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="640" height="400" fill="url(#glow)"/>
+  <path d="M300 40h40l30 320h-100l30-320z" fill="url(#beam)" opacity="0.85"/>
+  <ellipse cx="320" cy="340" rx="120" ry="18" fill="#3b82f6" opacity="0.22"/>
+  <ellipse cx="320" cy="340" rx="70" ry="10" fill="#93c5fd" opacity="0.28"/>
+  <g opacity="0.35" stroke="#3b82f6" stroke-width="1">
+    <path d="M80 300c40-20 90-30 140-18"/>
+    <path d="M420 290c50 12 90 8 140-16"/>
+    <path d="M120 250c30-40 70-55 120-40"/>
+    <path d="M400 240c45-20 90-15 130 10"/>
+  </g>
+</svg>

@@ -1,0 +1,65 @@
+plugins {
+	id 'fabric-loom' version '1.13.6'
+	id 'maven-publish'
+}
+
+def videoEdition = (findProperty('videoEdition')?.toString() == 'true')
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+	archivesName = videoEdition ? 'nitro-client-video-121' : project.archives_base_name
+}
+
+repositories {
+	mavenCentral()
+	maven { url 'https://maven.fabricmc.net/' }
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+processResources {
+	inputs.property 'version', project.version
+	inputs.property 'videoEdition', videoEdition
+	inputs.property 'modName', 'Nitro Client'
+
+	filesMatching('fabric.mod.json') {
+		expand 'version': project.version,
+				'mod_name': 'Nitro Client',
+				'mod_description': videoEdition
+						? 'Nitro Client for Minecraft 1.21.11 — animated menus'
+						: 'Nitro Client for Minecraft 1.21.11'
+	}
+
+	doLast {
+		def out = file("${project.layout.buildDirectory.get()}/resources/main/nitro-video-edition.flag")
+		if (videoEdition) {
+			out.parentFile.mkdirs()
+			out.text = 'true\n'
+		} else if (out.exists()) {
+			out.delete()
+		}
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 21
+}
+
+java {
+	withSourcesJar()
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+	from('LICENSE') {
+		rename { "${it}_${project.base.archivesName.get()}" }
+	}
+}

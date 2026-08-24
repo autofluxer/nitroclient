@@ -1,0 +1,35 @@
+# Dependencies and build caches
+node_modules/
+.gradle/
+**/build/
+.cache/
+
+# Packaged launchers (too large for GitHub; stay on this PC)
+nitro-launcher-asar/dist-exe/
+*.exe
+
+# Bundled Minecraft runtime (stays on this PC)
+nitro-launcher-asar/game-121/
+nitro-launcher/game-121/
+
+# Unpacked / extracted launcher copies
+_asar_extract/
+_asar_verify252/
+_asar_winunpacked/
+_extract_250/
+
+# Secrets and local auth (stay on this PC)
+.env
+.env.*
+owner-auth.json
+OWNER.txt
+**/*credentials*
+**/*-tokens.json
+
+# Logs
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini

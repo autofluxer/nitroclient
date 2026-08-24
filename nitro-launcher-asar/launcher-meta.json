@@ -1,0 +1,104 @@
+{
+  "launcherVersion": "2.6.7",
+  "remoteMetaUrl": "https://nitrosmp.lol/api/nitro-launcher.json",
+  "downloadUrl": "https://nitrosmp.lol/download",
+  "updatedAt": 0,
+  "partners": [
+    {
+      "id": "nitro-smp",
+      "name": "Nitro SMP",
+      "host": "nitrosmp.lol",
+      "tag": "OFFICIAL",
+      "featured": true,
+      "description": "Official Nitro survival SMP",
+      "icon": "assets/icon.png"
+    },
+    {
+      "id": "hypixel",
+      "name": "Hypixel",
+      "host": "mc.hypixel.net",
+      "tag": "PARTNER",
+      "description": "The largest Minecraft server network",
+      "icon": "https://api.mcsrvstat.us/icon/mc.hypixel.net"
+    },
+    {
+      "id": "minehut",
+      "name": "Minehut",
+      "host": "minehut.com",
+      "tag": "PARTNER",
+      "description": "Create and join community servers",
+      "icon": "https://api.mcsrvstat.us/icon/minehut.com"
+    },
+    {
+      "id": "cubecraft",
+      "name": "CubeCraft",
+      "host": "play.cubecraft.net",
+      "tag": "PARTNER",
+      "description": "Minigames and skyblock",
+      "icon": "https://api.mcsrvstat.us/icon/play.cubecraft.net"
+    }
+  ],
+  "news": [
+    {
+      "title": "Nitro launcher refresh",
+      "body": "Unique Nitro home layout, working controls, and cleaner navigation."
+    },
+    {
+      "title": "Nitro SMP",
+      "body": "Live player count, ping, and one-click join from the Servers tab."
+    }
+  ],
+  "changelog": [
+    {
+      "version": "2.6.7",
+      "date": "2026-08-21",
+      "items": [
+        "Friends search works without ntfy.sh — cracked/offline usernames can be found"
+      ]
+    },
+    {
+      "version": "2.6.6",
+      "date": "2026-08-21",
+      "items": [
+        "Blue Nitro theme, Friends and Profiles in the top nav, bigger Servers page, and a black account menu"
+      ]
+    },
+    {
+      "version": "2.5.1",
+      "date": "2026-08-05",
+      "items": [
+        "Removed cosmetics, custom skins manager, and animated capes from the client"
+      ]
+    },
+    {
+      "version": "2.5.0",
+      "date": "2026-08-04",
+      "items": [
+        "Live remote partners, news, and changelog (no client update needed)",
+        "Owner tools for publishing launcher content in real time"
+      ]
+    },
+    {
+      "version": "1.4.0",
+      "date": "2026-07-28",
+      "items": [
+        "Premium launcher redesign inspired by top commercial clients",
+        "Home: news, server status, and quick launch",
+        "Settings organized into Account / Graphics / Launcher / Minecraft / Performance / Downloads / Experimental"
+      ]
+    },
+    {
+      "version": "1.3.0",
+      "date": "2026-06-28",
+      "items": [
+        "Prebuilt Nitro 1.8.9 — no Gradle build for players",
+        "Automatic Java 8 download and setup wizard",
+        "Server hub focused on Nitro SMP",
+        "Launcher mod toggles, resource pack slot, export/import settings",
+        "Performance mode stacks on top of presets instead of replacing them",
+        "Join Nitro SMP button on in-game welcome screen",
+        "Tab list head rendering fix"
+      ]
+    }
+  ]
+}

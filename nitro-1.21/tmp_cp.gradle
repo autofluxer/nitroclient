@@ -1,0 +1,5 @@
+tasks.register("printCp") {
+  doLast {
+    println configurations.compileClasspath.asPath
+  }
+}

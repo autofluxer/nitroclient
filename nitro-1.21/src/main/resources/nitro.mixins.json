@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "package": "io.github.nitro.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MinecraftClientMixin",
+    "CreateWorldScreenMixin",
+    "SelectWorldScreenMixin",
+    "MultiplayerScreenMixin",
+    "PlayerListHudMixin",
+    "SplashOverlayMixin",
+    "SplashOverlayAccessor",
+    "CameraAccessor",
+    "GameRendererMixin",
+    "GameMenuScreenMixin",
+    "ScreenBackgroundMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

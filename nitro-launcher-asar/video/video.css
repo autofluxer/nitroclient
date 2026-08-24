@@ -1,0 +1,122 @@
+/* Motion layer for the animated Nitro Client build — keeps stock theme colors. */
+
+body.video-edition .boot-splash-aurora {
+  animation: nvAurora 8s ease-in-out infinite alternate;
+}
+
+@keyframes nvAurora {
+  from { transform: translate3d(-2%, -1%, 0) scale(1); opacity: 0.75; }
+  to { transform: translate3d(3%, 2%, 0) scale(1.06); opacity: 1; }
+}
+
+body.video-edition .shell {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+body.video-edition.shell-ready .shell {
+  animation: nvShellIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes nvShellIn {
+  to { opacity: 1; transform: none; }
+}
+
+body.video-edition .fc-sidebar .fc-nav {
+  opacity: 0;
+  transform: translateX(-12px);
+}
+
+body.video-edition.shell-ready .fc-sidebar .fc-nav {
+  animation: nvNavIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+body.video-edition.shell-ready .fc-sidebar .fc-nav:nth-child(1) { animation-delay: 0.06s; }
+body.video-edition.shell-ready .fc-sidebar .fc-nav:nth-child(2) { animation-delay: 0.12s; }
+body.video-edition.shell-ready .fc-sidebar .fc-nav:nth-child(3) { animation-delay: 0.18s; }
+body.video-edition.shell-ready .fc-sidebar .fc-nav:nth-child(4) { animation-delay: 0.24s; }
+body.video-edition.shell-ready .fc-sidebar .fc-nav:nth-child(5) { animation-delay: 0.3s; }
+body.video-edition.shell-ready .fc-sidebar .fc-nav:nth-child(6) { animation-delay: 0.36s; }
+body.video-edition.shell-ready .fc-sidebar .fc-nav:nth-child(7) { animation-delay: 0.42s; }
+
+@keyframes nvNavIn {
+  to { opacity: 1; transform: none; }
+}
+
+body.video-edition .fc-card-featured {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+body.video-edition.shell-ready .fc-card-featured {
+  animation: nvHeroIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.14s forwards;
+}
+
+@keyframes nvHeroIn {
+  to { opacity: 1; transform: none; }
+}
+
+body.video-edition .fc-bottom-row,
+body.video-edition .fc-card-side {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+body.video-edition.shell-ready .fc-bottom-row,
+body.video-edition.shell-ready .fc-card-side {
+  animation: nvHeroIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.32s forwards;
+}
+
+body.video-edition .btn-play {
+  animation: nvPlayPulse 2.6s ease-in-out infinite;
+}
+
+body.video-edition .btn-play::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.22) 48%, transparent 62%);
+  transform: translateX(-120%);
+  animation: nvPlaySheen 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+body.video-edition .btn-play {
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes nvPlayPulse {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.08); }
+}
+
+@keyframes nvPlaySheen {
+  0%, 55% { transform: translateX(-120%); }
+  80%, 100% { transform: translateX(120%); }
+}
+
+body.video-edition .skin-stage-glow {
+  animation: nvSkinGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes nvSkinGlow {
+  from { opacity: 0.55; transform: scale(0.98); }
+  to { opacity: 0.95; transform: scale(1.04); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.video-edition *,
+  body.video-edition *::before,
+  body.video-edition *::after {
+    animation: none !important;
+  }
+  body.video-edition .shell,
+  body.video-edition .fc-card-featured,
+  body.video-edition .fc-sidebar .fc-nav,
+  body.video-edition .fc-bottom-row,
+  body.video-edition .fc-card-side {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

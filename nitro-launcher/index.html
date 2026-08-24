@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nitro Client</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="leaf">
+  <div class="jungle-bg" aria-hidden="true"></div>
+  <div class="jungle-dim" aria-hidden="true"></div>
+  <canvas id="nitroBg" aria-hidden="true" hidden></canvas>
+  <div class="bg-noise" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <div class="shell">
+    <header class="titlebar leaf-top">
+      <div class="titlebar-drag leaf-brand">
+        <img src="assets/icon.png" alt="" class="titlebar-logo" />
+        <span class="titlebar-brand">NITRO CLIENT</span>
+      </div>
+
+      <nav class="leaf-nav">
+        <button class="nav-item active" data-view="launchpad" type="button" title="Home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
+        </button>
+        <button class="nav-item" data-view="versions" type="button" title="Versions">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        </button>
+        <button class="nav-item" data-view="settings" type="button" title="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="3"/><path d="M12 1.5v2M12 20.5v2M4 4l1.4 1.4M18.6 18.6L20 20M1.5 12h2M20.5 12h2M4 20l1.4-1.4M18.6 5.4L20 4"/></svg>
+        </button>
+        <button class="nav-item" id="openMcFolder" type="button" title="Game folder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        </button>
+      </nav>
+
+      <div class="leaf-top-right">
+        <button class="nitro-plus" type="button" id="discordBtn" title="Discord">NITRO+</button>
+        <div class="titlebar-user">
+          <div class="avatar sm" id="avatar">P</div>
+          <input id="username" class="titlebar-input" maxlength="16" placeholder="Username" spellcheck="false" autocomplete="off" />
+        </div>
+        <div class="window-controls">
+          <button type="button" class="win-btn" id="winMin" aria-label="Minimize">&#8722;</button>
+          <button type="button" class="win-btn" id="winMax" aria-label="Maximize">&#9633;</button>
+          <button type="button" class="win-btn win-close" id="winClose" aria-label="Close">&#10005;</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="promo-bar">
+      <span>Join Nitro SMP · nitrosmp.lol</span>
+      <button class="promo-link" id="joinSmpBtn" type="button">Join now</button>
+      <button class="promo-link ghost" id="copyIpBtn" type="button">Copy IP</button>
+    </div>
+
+    <div class="app leaf-app">
+      <main class="main">
+        <section id="view-launchpad" class="view active">
+          <div class="home leaf-home" id="homeShell">
+            <div class="leaf-stage">
+              <div class="leaf-center">
+                <div class="hero-logo-wrap">
+                  <img src="assets/icon.png" alt="" class="hero-logo" />
+                </div>
+                <h1 class="leaf-title">NITRO CLIENT</h1>
+                <p class="leaf-online">
+                  <span class="smp-dot" id="smpDot"></span>
+                  <span id="smpStatusText">Checking…</span>
+                  <span id="smpMeta"></span>
+                  <span class="smp-ping" id="smpPing"></span>
+                </p>
+                <p class="leaf-sub" id="selectedHint">Mods, HUD, and the Nitro main menu</p>
+                <span class="hero-badge" id="profileBadge" hidden>NITRO</span>
+                <h2 class="hero-title" id="selectedLabel" hidden>Nitro Client</h2>
+
+                <div class="leaf-launch-wrap">
+                  <button class="dock-play leaf-launch" id="launchBtn" type="button">
+                    <svg class="dock-play-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                    <svg class="dock-stop-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" hidden><path d="M6 6h12v12H6z"/></svg>
+                    <span id="launchBtnLabel">LAUNCH GAME</span>
+                  </button>
+                  <button class="leaf-version-chip" id="switchVersionBtn" type="button" title="Switch version">
+                    <span class="dock-ver" id="dockVerPill">1.21.11</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                  </button>
+                </div>
+
+                <p class="leaf-version-line">
+                  <strong id="launchBtnSub">Nitro Client</strong>
+                  <span class="dock-meta" id="metaVersion">Offline · Cracked supported</span>
+                </p>
+
+                <div class="chip-row" id="heroFeatures" hidden></div>
+
+                <div class="launch-status idle" id="launchStatus">
+                  <div class="status-row">
+                    <span id="statusText">Ready to play</span>
+                    <span id="statusPct"></span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" id="progressFill"></div>
+                  </div>
+                </div>
+
+                <div class="update-banner hidden" id="updateBanner">
+                  <div>
+                    <strong>Update available</strong>
+                    <span id="updateBannerText">A newer launcher is ready.</span>
+                  </div>
+                  <button class="ghost-btn sm" id="updateDownloadBtn" type="button">Download</button>
+                </div>
+
+                <article class="smp-strip" id="smpCard" hidden>
+                  <span class="smp-credit" id="smpCredit"></span>
+                  <span class="smp-motd" id="smpMotd">nitrosmp.lol</span>
+                </article>
+
+                <div class="quick-servers hidden" id="serverHub">
+                  <span class="quick-label" id="lastServerLabel">Also play on</span>
+                  <div class="quick-server-row" id="serverHubGrid"></div>
+                </div>
+
+                <div class="news-panel hidden" id="newsPanel" aria-hidden="true" hidden>
+                  <div class="news-list" id="newsList"></div>
+                </div>
+                <button type="button" id="playSmpBtn" hidden aria-hidden="true"></button>
+                <button class="dock-solo" id="launchSoloBtn" type="button" hidden>Solo</button>
+              </div>
+
+              <aside class="leaf-updates">
+                <h3>LATEST UPDATES</h3>
+                <article class="update-card">
+                  <span class="tag">MAJOR UPDATE</span>
+                  <strong>NITRO NEW LOOK NEW FEEL</strong>
+                  <p>Leaf-style UI &amp; jungle menus</p>
+                </article>
+                <article class="update-card alt">
+                  <span class="tag">SMP</span>
+                  <strong>Nitro SMP is live</strong>
+                  <p>Join nitrosmp.lol with one click</p>
+                </article>
+              </aside>
+            </div>
+
+            <footer class="leaf-status">
+              <span id="launcherVersionLabel">v1.3.0</span>
+              <span class="leaf-status-mid">Nitro Client</span>
+              <span>Top: 1.21.11</span>
+            </footer>
+          </div>
+        </section>
+
+        <section id="view-versions" class="view page">
+          <header class="page-head">
+            <h2>Versions</h2>
+            <p><strong>Nitro Modern 1.21.11</strong> is the recommended modern target. Pick any build to launch.</p>
+          </header>
+          <input type="search" id="versionSearch" class="search-input" placeholder="Search versions…" />
+          <div class="version-grid" id="versionGrid"></div>
+        </section>
+
+        <section id="view-settings" class="view page">
+          <header class="page-head">
+            <h2>Settings</h2>
+            <p>Launcher preferences.</p>
+          </header>
+          <div class="settings-card">
+            <h3>Account</h3>
+            <p class="settings-note">Offline mode works on cracked servers. Microsoft login is for players who own Minecraft: Java Edition.</p>
+            <div class="account-mode" id="accountMode">
+              <label class="account-option">
+                <input type="radio" name="loginMode" value="offline" checked />
+                <span>Offline</span>
+              </label>
+              <label class="account-option">
+                <input type="radio" name="loginMode" value="microsoft" />
+                <span>Microsoft (Premium)</span>
+              </label>
+            </div>
+            <div class="account-microsoft" id="microsoftPanel">
+              <p class="account-status" id="microsoftStatus">Not signed in</p>
+              <label class="toggle-row">
+                <input type="checkbox" id="rememberMicrosoft" checked />
+                <span>Remember login on this PC (encrypted locally)</span>
+              </label>
+              <div class="security-panel" id="securityPanel">
+                <strong id="securityPanelTitle">Your account stays yours</strong>
+                <ul id="securityPanelList">
+                  <li>Sign-in opens the official Microsoft page — Nitro never sees your password</li>
+                  <li>Login tokens stay on your computer only</li>
+                  <li>Use <strong>Sign out</strong> anytime to remove saved login from this PC</li>
+                </ul>
+              </div>
+              <div class="settings-actions">
+                <button class="secondary-btn" id="microsoftLoginBtn" type="button">Sign in with Microsoft</button>
+                <button class="secondary-btn" id="microsoftLogoutBtn" type="button" hidden>Sign out</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <label for="memoryInput">RAM allocation</label>
+            <div class="ram-row">
+              <input type="range" id="memorySlider" min="2048" max="8192" step="512" value="4096" />
+              <input type="number" id="memoryInput" min="1024" max="16384" step="512" value="4096" />
+              <span class="ram-unit">MB</span>
+            </div>
+            <button class="secondary-btn" id="openClientFolder" type="button">Open client folder</button>
+          </div>
+
+          <div class="settings-card" data-nitro-only>
+            <h3>Gameplay preset</h3>
+            <div class="preset-grid" id="presetGrid"></div>
+            <label class="toggle-row">
+              <input type="checkbox" id="performanceMode" />
+              <span>Performance mode</span>
+            </label>
+          </div>
+
+          <div class="settings-card" data-nitro-only>
+            <h3>Module toggles</h3>
+            <div class="mod-toggle-grid" id="modToggleGrid"></div>
+          </div>
+
+          <div class="settings-card" data-nitro-only>
+            <h3>Resource pack</h3>
+            <p class="settings-note" id="resourcePackLabel">Optional pack copied into your game folder on launch.</p>
+            <div class="settings-actions">
+              <button class="secondary-btn" id="pickResourcePackBtn" type="button">Choose pack</button>
+              <button class="secondary-btn" id="applyResourcePackBtn" type="button">Install now</button>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3>Backup settings</h3>
+            <div class="settings-actions">
+              <button class="secondary-btn" id="exportSettingsBtn" type="button">Export</button>
+              <button class="secondary-btn" id="importSettingsBtn" type="button">Import</button>
+            </div>
+          </div>
+
+          <div class="settings-card" id="javaSetupCard" data-nitro-only>
+            <h3>Java setup</h3>
+            <p class="settings-note" id="javaSetupStatus">Checking Java…</p>
+            <div class="settings-actions">
+              <button class="secondary-btn" id="setupJavaBtn" type="button">Download Java 8</button>
+            </div>
+          </div>
+
+          <div class="settings-card" data-nitro-only>
+            <h3>Maintenance</h3>
+            <div class="settings-actions">
+              <button class="secondary-btn" id="repairBtn" type="button">Repair install</button>
+              <button class="secondary-btn" id="openLaunchLogBtn" type="button">Open launch log</button>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3>Changelog</h3>
+            <div class="changelog-list" id="changelogList"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="onboarding hidden" id="javaWizard">
+    <div class="onboarding-card">
+      <img src="assets/icon.png" alt="" class="onboarding-logo" />
+      <h2>Java 8 required</h2>
+      <p>Nitro 1.8.9 needs Java 8 to run.</p>
+      <div class="settings-actions onboarding-actions">
+        <button class="secondary-btn" id="javaWizardSkip" type="button">I'll install manually</button>
+        <button class="dock-play onboarding-btn" id="javaWizardInstall" type="button">Download Java 8</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="onboarding hidden" id="onboarding">
+    <div class="onboarding-card">
+      <img src="assets/icon.png" alt="" class="onboarding-logo" />
+      <h2>Welcome to Nitro Client</h2>
+      <p>Pick a username and hit <strong>LAUNCH GAME</strong>.</p>
+      <button class="dock-play onboarding-btn" id="onboardingDone" type="button">Got it</button>
+    </div>
+  </div>
+
+  <script src="nitro-bg.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

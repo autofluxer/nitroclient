@@ -1,0 +1,1098 @@
+/* ===== Fast Client–inspired Nitro shell (layout only) ===== */
+:root {
+  --fc-accent: #3b82f6;
+  --fc-accent-soft: rgba(59, 130, 246, .28);
+  --fc-text: #ffffff;
+  --fc-muted: rgba(255, 255, 255, .62);
+  --fc-glass: rgba(12, 12, 14, .72);
+  --fc-glass-card: rgba(18, 18, 22, .55);
+  --fc-border: rgba(255, 255, 255, .14);
+  --fc-border-soft: rgba(255, 255, 255, .08);
+  --fc-hover: rgba(255, 255, 255, .06);
+  --fc-active: rgba(0, 0, 0, .45);
+  --fc-radius: 18px;
+  --fc-radius-card: 10px;
+  --fc-ease: cubic-bezier(.22, 1, .36, 1);
+}
+
+body.fc-ui {
+  --accent: #3b82f6;
+  --accent-2: #2563eb;
+  --accent-deep: #1d4ed8;
+  --accent-hi: #93c5fd;
+  background: #0b0d10;
+  color: var(--fc-text);
+  display: block;
+  overflow: hidden;
+  color-scheme: dark;
+}
+body.fc-ui .avatar {
+  background: #16181c;
+  border: 1px solid rgba(255, 255, 255, .12);
+  color: #fff;
+}
+body.fc-ui .account-drop-btn.accent { color: #fff; }
+body.fc-ui .account-drop-user input:focus,
+body.fc-ui .search:focus {
+  border-color: rgba(59, 130, 246, .55);
+}
+
+/* Dark scrollbars (Chromium / Electron) */
+body.fc-ui,
+body.fc-ui * {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, .22) rgba(255, 255, 255, .04);
+}
+body.fc-ui ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+body.fc-ui ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, .04);
+  border-radius: 999px;
+}
+body.fc-ui ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, .2);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+body.fc-ui ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, .32);
+  background-clip: padding-box;
+}
+body.fc-ui ::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Hide Online / Ready status pill + green dot */
+body.fc-ui #onlinePill,
+body.fc-ui .dash-status {
+  display: none !important;
+}
+
+/* No wallpaper / scenery — solid dark chrome only */
+body.fc-ui .panorama,
+body.fc-ui .panorama-dim,
+body.fc-ui .jungle-bg,
+body.fc-ui .bg-video {
+  display: none !important;
+  opacity: 0 !important;
+  background: none !important;
+  filter: none !important;
+  animation: none !important;
+}
+body.fc-ui.has-bg-video .jungle-bg,
+body.fc-ui.has-bg-video .bg-video {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+/* Launcher fills the OS window — nothing behind it */
+body.fc-ui .shell {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  display: grid;
+  grid-template-rows: 56px 1fr;
+  grid-template-columns: 1fr;
+  flex-direction: unset;
+  border-radius: 0;
+  overflow: hidden;
+  background: #0b0d10;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  animation: fcWindowIn .45s var(--fc-ease) both;
+}
+
+body.fc-ui #view-launchpad.view.active {
+  display: block;
+  height: 100%;
+  overflow: hidden;
+}
+@keyframes fcWindowIn {
+  from { opacity: 0; transform: translateY(10px) scale(.985); }
+  to { opacity: 1; transform: none; }
+}
+
+body.fc-ui .shell.shell-boot { opacity: 0; }
+
+/* Top bar */
+body.fc-ui .fc-topbar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  height: 64px;
+  padding: 0 16px 0 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, .06);
+  -webkit-app-region: drag;
+  background: #0d0d0d;
+}
+body.fc-ui .fc-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  -webkit-app-region: no-drag;
+}
+body.fc-ui .fc-brand-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: none;
+  border: 1px solid rgba(255, 255, 255, .1);
+}
+body.fc-ui .fc-brand-name {
+  font-size: 14px;
+  font-weight: 750;
+  letter-spacing: .08em;
+  color: #fff;
+}
+body.fc-ui .fc-top-spacer { min-width: 0; }
+body.fc-ui .fc-top-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  -webkit-app-region: no-drag;
+}
+
+body.fc-ui .account-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 12px 0 6px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, .35);
+  border: 1px solid var(--fc-border-soft);
+  transition: background .18s var(--fc-ease), border-color .18s var(--fc-ease), transform .18s var(--fc-ease);
+}
+body.fc-ui .account-btn:hover {
+  background: rgba(255, 255, 255, .08);
+  border-color: rgba(255, 255, 255, .18);
+}
+body.fc-ui .account-btn .account-name {
+  font-size: 13px;
+  font-weight: 600;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+body.fc-ui .account-chevron {
+  width: 10px;
+  height: 10px;
+  opacity: .7;
+  margin-left: 2px;
+}
+body.fc-ui .avatar.sm,
+body.fc-ui .user-head {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+}
+body.fc-ui .win-controls {
+  display: inline-flex;
+  gap: 2px;
+}
+body.fc-ui .win-btn {
+  width: 34px;
+  height: 28px;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, .75);
+  font-size: 14px;
+  transition: background .15s ease, color .15s ease;
+}
+body.fc-ui .win-btn:hover {
+  background: rgba(255, 255, 255, .1);
+  color: #fff;
+}
+body.fc-ui .win-close:hover {
+  background: rgba(239, 68, 68, .85);
+  color: #fff;
+}
+
+/* Body: full-width content */
+body.fc-ui .fc-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body.fc-ui .fc-sidebar { display: none !important; }
+
+body.fc-ui .fc-topnav {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 4px;
+  height: 100%;
+  -webkit-app-region: no-drag;
+}
+body.fc-ui .fc-nav {
+  min-width: 56px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: 0;
+  color: rgba(255, 255, 255, .72);
+  position: relative;
+  transition: color .18s var(--fc-ease);
+}
+body.fc-ui .fc-nav svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+body.fc-ui .fc-nav span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+body.fc-ui .fc-nav:hover { color: #fff; }
+body.fc-ui .fc-nav.active {
+  background: transparent;
+  color: #fff;
+  box-shadow: none;
+}
+body.fc-ui .fc-nav.active::after {
+  content: '';
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 0;
+  height: 2px;
+  background: var(--fc-accent);
+}
+body.fc-ui .fc-nav.active svg {
+  color: #fff;
+  stroke: #fff;
+  filter: none;
+}
+body.fc-ui .fc-icon-btn {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, .75);
+}
+body.fc-ui .fc-icon-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.7;
+}
+body.fc-ui .fc-icon-btn:hover,
+body.fc-ui .fc-icon-btn.active {
+  background: rgba(255, 255, 255, .08);
+  color: #fff;
+}
+body.fc-ui .account-signed {
+  font-size: 11px;
+  color: rgba(255, 255, 255, .45);
+  font-weight: 600;
+}
+
+body.fc-ui .fc-main {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Views */
+body.fc-ui .view {
+  display: none;
+  height: 100%;
+  min-height: 0;
+  overflow: auto;
+  animation: fcViewIn .16s ease both;
+}
+body.fc-ui .view.active { display: block; }
+@keyframes fcViewIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Play dashboard */
+body.fc-ui .fc-dash.dashboard,
+body.fc-ui .fc-dash {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+body.fc-ui .fc-card {
+  position: relative;
+  border-radius: var(--fc-radius-card);
+  background: rgba(16, 17, 20, .92);
+  border: 1px solid rgba(59, 130, 246, .16);
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, .04) inset,
+    0 0 24px rgba(59, 130, 246, .06);
+  overflow: hidden;
+  transition: border-color .18s ease, background .18s ease, box-shadow .18s ease;
+}
+body.fc-ui .fc-card:hover {
+  border-color: rgba(59, 130, 246, .32);
+  background: rgba(20, 21, 25, .96);
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, .08) inset,
+    0 0 28px rgba(59, 130, 246, .12);
+}
+body.fc-ui .fc-card-featured {
+  grid-column: 1;
+  grid-row: 1;
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  min-height: 0;
+}
+body.fc-ui .fc-card-versions,
+body.fc-ui .fc-card-mods {
+  min-height: 0;
+}
+body.fc-ui .fc-card-side {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+body.fc-ui .fc-bottom-row {
+  grid-column: 1;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  min-height: 0;
+}
+
+/* Featured play card */
+body.fc-ui .fc-featured-copy {
+  padding: 20px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+body.fc-ui .fc-kicker {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .45);
+}
+body.fc-ui .fc-featured-copy h2 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  line-height: 1.15;
+}
+body.fc-ui .fc-featured-copy p {
+  font-size: 13px;
+  color: rgba(255, 255, 255, .5);
+  line-height: 1.45;
+  max-width: 34ch;
+}
+body.fc-ui .fc-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+body.fc-ui .meta-pill {
+  font-size: 11px;
+  font-weight: 650;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .06);
+  border: 1px solid rgba(255, 255, 255, .08);
+  color: rgba(255, 255, 255, .85);
+  box-shadow: none;
+}
+body.fc-ui .fc-featured-actions {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+body.fc-ui .btn-play {
+  width: 100%;
+  min-width: 0;
+  height: 56px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  color: #fff;
+  background: var(--fc-accent);
+  border: 1px solid rgba(255, 255, 255, .08);
+  box-shadow: none;
+  text-shadow: none;
+}
+body.fc-ui .btn-play:hover {
+  background: #2563eb;
+  box-shadow: 0 0 22px rgba(37, 99, 235, .35);
+}
+body.fc-ui .dash-play-sub {
+  color: var(--fc-muted);
+  font-size: 12px;
+}
+body.fc-ui .fc-featured-stage {
+  position: relative;
+  min-height: 0;
+  background:
+    radial-gradient(ellipse at 50% 78%, rgba(59, 130, 246, .16), transparent 55%),
+    radial-gradient(ellipse at 50% 20%, rgba(59, 130, 246, .06), transparent 50%),
+    #0a0c11;
+  border-left: 1px solid rgba(59, 130, 246, .12);
+  overflow: hidden;
+}
+body.fc-ui .fc-featured-stage .home-skin {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+}
+body.fc-ui .fc-featured-stage #skinCanvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+body.fc-ui .skin-stage-bg,
+body.fc-ui .skin-stage-fade,
+body.fc-ui .skin-stage-glow,
+body.fc-ui .skin-brand-mark,
+body.fc-ui .skin-ground {
+  display: none !important;
+}
+body.fc-ui .dash-skin-wrap {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+/* Cool accents from concept: N watermark, energy swirls, glow pad */
+body.fc-ui .skin-fx {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+body.fc-ui .skin-fx-n {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(120px, 28vw, 190px);
+  font-weight: 800;
+  letter-spacing: -.06em;
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(59, 130, 246, .45);
+  text-shadow: 0 0 40px rgba(59, 130, 246, .25);
+  opacity: .55;
+  user-select: none;
+}
+body.fc-ui .skin-fx-swirl {
+  position: absolute;
+  border: 1px solid rgba(96, 165, 250, .28);
+  border-radius: 50%;
+  filter: blur(.2px);
+  opacity: .55;
+}
+body.fc-ui .skin-fx-swirl-a {
+  width: 78%;
+  height: 42%;
+  left: 11%;
+  top: 28%;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  transform: rotate(-18deg);
+  animation: skinSwirl 10s linear infinite;
+}
+body.fc-ui .skin-fx-swirl-b {
+  width: 62%;
+  height: 34%;
+  left: 19%;
+  top: 36%;
+  border-right-color: transparent;
+  border-top-color: transparent;
+  transform: rotate(12deg);
+  animation: skinSwirl 14s linear infinite reverse;
+  opacity: .4;
+}
+@keyframes skinSwirl {
+  from { transform: rotate(-18deg); }
+  to { transform: rotate(342deg); }
+}
+body.fc-ui .skin-fx-pad {
+  position: absolute;
+  left: 50%;
+  bottom: 14%;
+  width: 46%;
+  height: 28px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse, rgba(147, 197, 253, .55) 0%, rgba(59, 130, 246, .28) 35%, transparent 70%);
+  box-shadow:
+    0 0 28px rgba(59, 130, 246, .45),
+    0 0 60px rgba(37, 99, 235, .25);
+  animation: padPulse 2.8s ease-in-out infinite;
+}
+@keyframes padPulse {
+  0%, 100% { opacity: .75; transform: translateX(-50%) scaleX(1); }
+  50% { opacity: 1; transform: translateX(-50%) scaleX(1.06); }
+}
+body.reduce-motion .skin-fx-swirl,
+body.reduce-motion .skin-fx-pad {
+  animation: none !important;
+}
+body.fc-ui .dash-play.skin-play {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  margin: 0;
+  display: none; /* play controls live in copy column */
+}
+
+/* Small action cards — atmospheric art like reference */
+body.fc-ui .fc-action-card {
+  position: relative;
+  isolation: isolate;
+  padding: 18px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  height: 100%;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  overflow: hidden;
+  background: #101214;
+  border: 1px solid rgba(255, 255, 255, .08);
+}
+body.fc-ui .fc-action-card .fc-card-art,
+body.fc-ui .fc-action-card .fc-card-veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+}
+body.fc-ui .fc-action-card .fc-card-art {
+  z-index: 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: .55;
+  transform: scale(1.04);
+  transition: opacity .2s ease, transform .25s ease;
+}
+body.fc-ui .fc-action-card .fc-card-veil {
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(10, 12, 16, .35) 0%, rgba(10, 12, 16, .72) 55%, rgba(10, 12, 16, .92) 100%),
+    linear-gradient(90deg, rgba(10, 12, 16, .55) 0%, transparent 55%);
+}
+body.fc-ui .fc-card-versions .fc-card-art {
+  background-image: url("assets/card-profiles.svg");
+  opacity: .9;
+  filter: none;
+}
+body.fc-ui .fc-card-mods .fc-card-art {
+  background-image: url("assets/card-mods.svg");
+  opacity: .9;
+  filter: none;
+}
+body.fc-ui .fc-action-card:hover .fc-card-art {
+  opacity: .7;
+  transform: scale(1.06);
+}
+body.fc-ui .fc-card-mods:hover .fc-card-art {
+  opacity: 1;
+}
+body.fc-ui .fc-action-card > *:not(.fc-card-art):not(.fc-card-veil) {
+  position: relative;
+  z-index: 2;
+}
+body.fc-ui .fc-action-card strong {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 2px;
+}
+body.fc-ui .fc-action-card small {
+  color: rgba(255, 255, 255, .55);
+  font-size: 12px;
+  line-height: 1.4;
+  max-width: 28ch;
+}
+body.fc-ui .fc-action-ico {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: rgba(8, 10, 14, .72);
+  border: 1px solid rgba(59, 130, 246, .55);
+  color: #fff;
+  margin-bottom: 6px;
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, .12),
+    0 0 16px rgba(59, 130, 246, .28);
+}
+body.fc-ui .fc-action-card .fc-card-cta {
+  margin-top: auto;
+  padding-top: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #3b82f6;
+}
+body.fc-ui .fc-action-card:hover {
+  border-color: rgba(59, 130, 246, .28);
+  background: #101214;
+}
+
+/* Side card */
+body.fc-ui .fc-side-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  padding: 14px;
+  gap: 10px;
+}
+body.fc-ui .side-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+body.fc-ui .side-head h3 {
+  font-size: 13px;
+  font-weight: 750;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .9);
+}
+body.fc-ui .text-link {
+  font-size: 12px;
+  color: rgba(255, 255, 255, .55);
+  font-weight: 600;
+}
+body.fc-ui .text-link:hover {
+  color: #fff;
+}
+body.fc-ui .side-hint {
+  font-size: 12px;
+  color: var(--fc-muted);
+}
+body.fc-ui .home-partners {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+body.fc-ui .partner-card {
+  background: rgba(255, 255, 255, .03);
+  border: 1px solid rgba(255, 255, 255, .06);
+  border-radius: 10px;
+  box-shadow: none;
+  transform: none;
+}
+body.fc-ui .partner-card:hover {
+  border-color: rgba(255, 255, 255, .12);
+  background: rgba(255, 255, 255, .05);
+  transform: none;
+  box-shadow: none;
+}
+body.fc-ui .partner-card.featured {
+  border-color: rgba(255, 255, 255, .1);
+  background: rgba(255, 255, 255, .04);
+}
+body.fc-ui .dash-side::before {
+  display: none !important;
+}
+body.fc-ui .side-block {
+  border-top: 1px solid var(--fc-border-soft);
+  padding-top: 10px;
+  max-height: 38%;
+  overflow: auto;
+}
+body.fc-ui .home-news {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Page views inside glass */
+body.fc-ui .view.page {
+  padding: 6px 4px 12px;
+}
+body.fc-ui .page-hero h2 {
+  font-size: 22px;
+  font-weight: 750;
+}
+body.fc-ui .page-hero p {
+  color: var(--fc-muted);
+}
+body.fc-ui .footer {
+  display: none !important;
+}
+
+/* Legacy topbar/nav hidden — replaced by fc-topbar + sidebar */
+body.fc-ui .topbar.glass { display: none !important; }
+body.fc-ui header.topbar { display: none !important; }
+
+/* Soften old glass dirt look inside pages */
+body.fc-ui .glass {
+  background: rgba(18, 18, 22, .55);
+  border: 1px solid var(--fc-border-soft);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+body.fc-ui .btn-primary,
+body.fc-ui .btn-accent {
+  background: var(--fc-accent);
+  border-color: rgba(255, 255, 255, .1);
+  box-shadow: none;
+  text-shadow: none;
+}
+body.fc-ui .btn-glass {
+  background: rgba(255, 255, 255, .06);
+  border: 1px solid rgba(255, 255, 255, .12);
+  box-shadow: none;
+}
+body.fc-ui .launch-status {
+  margin-top: 8px;
+}
+body.fc-ui .dash-head,
+body.fc-ui .dash-actions,
+body.fc-ui .dash-quick {
+  /* featured layout owns chrome */
+}
+body.fc-ui .fc-featured-copy .dash-quick {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+body.fc-ui .btn-skins-ico { color: var(--fc-accent); }
+
+body.fc-ui .update-banner {
+  margin-top: 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(59, 130, 246, .35);
+  background: rgba(59, 130, 246, .12);
+}
+
+body.fc-ui .account-dropdown {
+  background: #0a0a0c;
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 14px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, .55);
+  backdrop-filter: none;
+}
+
+body.fc-ui.shell-ready .fc-topbar,
+body.fc-ui.shell-ready .fc-sidebar,
+body.fc-ui.shell-ready .fc-card {
+  animation: none;
+}
+
+/* ===== Nitro play home ===== */
+body.fc-ui .fc-main { padding: 12px 16px 16px; background: #0d0d0d; }
+body.fc-ui .nx-play { gap: 10px; }
+body.fc-ui .nx-hero {
+  position: relative;
+  flex: 1.35 1 0;
+  min-height: 220px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #111;
+}
+body.fc-ui .nx-hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(13, 13, 13, .15) 0%, rgba(13, 13, 13, .55) 70%, #0d0d0d 100%),
+    url("assets/bg_jungle_2.png") center / cover no-repeat;
+  filter: saturate(1.05) brightness(.72);
+}
+body.fc-ui .nx-hero-center {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+}
+body.fc-ui .nx-hero-center h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, .55);
+}
+body.fc-ui .nx-change-ver {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, .1);
+  background: rgba(0, 0, 0, .72);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+body.fc-ui .nx-change-ver:hover { background: rgba(20, 20, 20, .9); }
+body.fc-ui .nx-hero-tools {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+body.fc-ui .nx-tool {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, .55);
+  border: 1px solid rgba(255, 255, 255, .1);
+  color: #fff;
+}
+body.fc-ui .nx-tool svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.7;
+}
+body.fc-ui .nx-tool:hover { background: rgba(59, 130, 246, .85); }
+body.fc-ui .nx-skin-slot { display: none !important; }
+body.fc-ui .nx-launch-wrap { flex: 0 0 auto; }
+body.fc-ui .nx-bottom {
+  flex: 1 1 0;
+  min-height: 180px;
+  display: grid;
+  grid-template-columns: 1.45fr minmax(240px, 320px);
+  gap: 12px;
+}
+body.fc-ui .nx-panel {
+  min-height: 0;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, .06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+body.fc-ui .nx-panel .side-head {
+  margin-bottom: 8px;
+}
+body.fc-ui .nx-panel .side-head h3 {
+  font-size: 11px;
+  letter-spacing: .08em;
+  color: rgba(255, 255, 255, .45);
+}
+body.fc-ui .nx-panel .home-news,
+body.fc-ui .nx-panel .home-friends {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+body.fc-ui .home-news {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+body.fc-ui .home-news-banner {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, .06);
+}
+body.fc-ui .home-news-banner:last-child { border-bottom: 0; }
+body.fc-ui .home-news-banner strong { display: block; font-size: 14px; }
+body.fc-ui .home-news-banner p {
+  margin: 4px 0 0;
+  color: var(--fc-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+body.fc-ui .home-friends .nx-friend-row {
+  background: rgba(255, 255, 255, .03);
+  border: 1px solid rgba(255, 255, 255, .06);
+  border-radius: 10px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+body.fc-ui .home-friends .friends-empty {
+  color: var(--fc-muted);
+  font-size: 13px;
+}
+body.fc-ui .partner-rank { display: none; }
+body.fc-ui .partner-card:hover,
+body.fc-ui .partner-card.featured {
+  border-color: rgba(59, 130, 246, .35);
+  background: rgba(59, 130, 246, .08);
+  transform: none;
+  box-shadow: none;
+}
+body.fc-ui .partner-join.is-offline { color: #93c5fd; }
+body.fc-ui .fc-card {
+  border-color: rgba(255, 255, 255, .06);
+  box-shadow: none;
+  background: #141414;
+}
+body.fc-ui .fc-card:hover {
+  border-color: rgba(255, 255, 255, .12);
+  box-shadow: none;
+}
+
+@media (max-width: 960px) {
+  body.fc-ui .nx-bottom { grid-template-columns: 1fr; }
+  body.fc-ui .fc-topnav .fc-nav { min-width: 56px; }
+  body.fc-ui .servers-grid { grid-template-columns: 1fr; }
+}
+
+body.fc-ui #view-partners.servers-view {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+body.fc-ui #view-partners.servers-view.active {
+  display: flex !important;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+}
+body.fc-ui .servers-app {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+  min-height: 0;
+}
+body.fc-ui .servers-hero h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+}
+body.fc-ui .servers-hero p {
+  margin: 4px 0 0;
+  color: var(--fc-muted);
+  font-size: 13px;
+}
+body.fc-ui .servers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  align-content: start;
+}
+body.fc-ui .server-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  text-align: left;
+  padding: 16px;
+  min-height: 148px;
+  border-radius: 12px;
+  background: #16181d;
+  border: 1px solid rgba(255, 255, 255, .08);
+  transition: border-color .16s ease, background .16s ease;
+}
+body.fc-ui .server-tile:hover {
+  border-color: rgba(59, 130, 246, .45);
+  background: #1a1d24;
+}
+body.fc-ui .server-tile.featured {
+  border-color: rgba(59, 130, 246, .4);
+}
+body.fc-ui .server-tile-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+body.fc-ui .server-tile img,
+body.fc-ui .server-tile .partner-icon,
+body.fc-ui .server-tile .partner-fallback {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+}
+body.fc-ui .server-tile strong {
+  display: block;
+  font-size: 16px;
+}
+body.fc-ui .server-tile em {
+  display: block;
+  font-style: normal;
+  color: var(--fc-muted);
+  font-size: 12px;
+  margin-top: 2px;
+}
+body.fc-ui .server-tile p {
+  margin: 0;
+  color: var(--fc-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+body.fc-ui .server-tile-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+body.fc-ui .server-join {
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+body.fc-ui .partner-join.is-offline { color: #93c5fd; }

@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nitro</title>
+  <script>
+    // Title updated after owner-mode probe in renderer.
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="fc-layout.css" />
+  <link rel="stylesheet" href="friends.css" />
+  <link rel="stylesheet" href="skins.css" />
+  <link rel="stylesheet" href="hosting.css" />
+</head>
+<body class="nitro-client mc-ui fc-ui is-booting">
+  <div id="ownerGate" class="owner-gate hidden" aria-hidden="true">
+    <div class="owner-gate-card">
+      <img src="assets/icon.png" alt="" class="owner-gate-logo" />
+      <h1>Nitro Owner</h1>
+      <p>Enter the owner password to manage live partners, news, and changelog.</p>
+      <label class="owner-gate-field">
+        <span>Password</span>
+        <input id="ownerPasswordInput" type="password" autocomplete="current-password" />
+      </label>
+      <p class="owner-gate-error" id="ownerGateError" hidden></p>
+      <button class="btn btn-primary" id="ownerUnlockBtn" type="button">Unlock</button>
+    </div>
+  </div>
+
+  <div id="bootSplash" class="boot-splash" aria-hidden="false">
+    <div class="boot-splash-bg" aria-hidden="true"></div>
+    <div class="boot-splash-aurora" aria-hidden="true"></div>
+    <canvas id="bootParticles" class="boot-particles" aria-hidden="true"></canvas>
+    <div class="boot-splash-stage">
+      <div class="boot-n" id="bootNLogo" aria-label="Nitro"></div>
+      <div class="boot-splash-glow" aria-hidden="true"></div>
+      <p class="boot-splash-title">NITRO</p>
+      <p class="boot-splash-sub">CLIENT</p>
+    </div>
+  </div>
+
+  <div class="panorama" aria-hidden="true">
+    <div class="jungle-bg" id="launcherBg"></div>
+    <video class="bg-video" id="launcherVideo" muted loop playsinline preload="none" hidden>
+      <source src="assets/bg_video.mp4" type="video/mp4" />
+    </video>
+  </div>
+  <div class="panorama-dim" aria-hidden="true"></div>
+
+  <div class="jungle-dim" hidden aria-hidden="true"></div>
+  <div class="vignette" hidden aria-hidden="true"></div>
+  <canvas id="nitroBg" hidden aria-hidden="true"></canvas>
+  <div class="bg-noise" hidden aria-hidden="true"></div>
+  <div class="dirt-scroll" hidden aria-hidden="true"></div>
+  <div class="dirt-shade" hidden aria-hidden="true"></div>
+  <div class="dirt-band" hidden aria-hidden="true"></div>
+
+  <div class="shell shell-boot">
+    <header class="fc-topbar">
+      <div class="fc-brand">
+        <img src="assets/icon.png" alt="" class="fc-brand-mark" />
+        <span class="fc-brand-name">NITRO CLIENT</span>
+      </div>
+      <nav class="fc-topnav" aria-label="Main">
+        <button type="button" class="fc-nav active" data-view="launchpad" title="Play">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h.01M10 10v4M14 10v4M18 12h.01"/></svg>
+          <span>Play</span>
+        </button>
+        <button type="button" class="fc-nav" data-view="mods" title="Mods">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 4v10l-7 4-7-4V7l7-4z"/><path d="M12 12l7-4M12 12v9M12 12L5 8"/></svg>
+          <span>Mods</span>
+        </button>
+        <button type="button" class="fc-nav" id="navSkins" data-view="skins" title="Skins">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8l2 3v13H6V7l2-3z"/><path d="M9 10h6M10 14h4"/></svg>
+          <span>Skins</span>
+        </button>
+        <button type="button" class="fc-nav" data-view="friends" title="Friends">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M16.5 11a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/><path d="M3.5 19c.9-2.8 2.8-4.2 4.5-4.2s3.6 1.4 4.5 4.2"/><path d="M14 19c.5-2 1.7-3.2 2.5-3.2s2 1.2 2.5 3.2"/></svg>
+          <span>Friends</span>
+        </button>
+        <button type="button" class="fc-nav" data-view="versions" title="Versions">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          <span>Versions</span>
+        </button>
+        <button type="button" class="fc-nav" data-view="partners" title="Servers">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="1.4"/><circle cx="14" cy="12" r="1.4"/><circle cx="10" cy="18" r="1.4"/></svg>
+          <span>Servers</span>
+        </button>
+        <button type="button" class="fc-nav" data-view="host" title="Host">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M3 12h18M12 4c3 3 3 13 0 16M12 4c-3 3-3 13 0 16"/></svg>
+          <span>Host</span>
+        </button>
+        <button type="button" class="fc-nav owner-only hidden" data-view="owner" title="Owner" id="navOwner">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.2 4.5 5 .7-3.6 3.5.9 5.1L12 14.8 7.5 16.8l.9-5.1L4.8 8.2l5-.7L12 3z"/></svg>
+          <span>Owner</span>
+        </button>
+      </nav>
+      <div class="fc-top-right">
+        <button class="icon-btn" id="discordBtn" type="button" title="Discord" aria-label="Discord" hidden>
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.3 4.4A19.8 19.8 0 0 0 15.9 3l-.2.4c1.6.4 2.4.9 3.2 1.6a13.4 13.4 0 0 0-11.8 0c.8-.7 1.7-1.3 3.2-1.6L10.1 3a19.8 19.8 0 0 0-4.4 1.4C2.9 8.6 2.1 12.7 2.5 16.7c1.8 1.3 3.5 2.1 5.2 2.6l1-1.5c-.9-.3-1.7-.7-2.4-1.2l.6-.4c2.9 1.4 6.3 1.4 9.2 0l.6.4c-.7.5-1.5.9-2.4 1.2l1 1.5c1.7-.5 3.4-1.3 5.2-2.6.5-4.6-.8-8.7-3.2-12.3zM9.3 14.2c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.6.8 1.6 1.8-.7 1.8-1.6 1.8zm5.4 0c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.6.8 1.6 1.8-.7 1.8-1.6 1.8z"/></svg>
+        </button>
+        <div class="account-chip-wrap" id="accountChipWrap">
+          <button class="account-btn" id="accountChipBtn" type="button" aria-expanded="false">
+            <img class="user-head" id="avatarImg" src="" alt="" hidden />
+            <div class="avatar sm" id="avatar">P</div>
+            <span class="account-signed">Signed in as</span>
+            <span id="accountChipName" class="account-name">Player</span>
+            <svg class="account-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="account-dropdown hidden" id="accountDropdown">
+            <div class="account-drop-head">
+              <div class="avatar lg" id="avatarLarge">P</div>
+              <div>
+                <strong id="accountDropTitle">Player</strong>
+                <p id="accountDropSub">Offline account</p>
+              </div>
+            </div>
+            <label class="account-drop-user">
+              <span>Username</span>
+              <input id="username" maxlength="16" placeholder="Username" spellcheck="false" autocomplete="off" />
+            </label>
+            <button class="account-drop-btn" id="accountSettingsBtn" type="button">Account Settings</button>
+            <div class="account-drop-sep"></div>
+            <button class="account-drop-btn accent" id="accountManageBtn" type="button">Manage Accounts</button>
+          </div>
+        </div>
+        <button class="chrome-link" id="openThemeModal" type="button" hidden>Theme</button>
+        <button class="fc-icon-btn" data-view="settings" type="button" title="Settings" aria-label="Settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2M6.1 6.1l1.6 1.6M16.3 16.3l1.6 1.6M6.1 17.9l1.6-1.6M16.3 7.7l1.6-1.6"/></svg>
+        </button>
+        <div class="win-controls">
+          <button type="button" class="win-btn" id="winMin" aria-label="Minimize">−</button>
+          <button type="button" class="win-btn" id="winMax" aria-label="Maximize">□</button>
+          <button type="button" class="win-btn win-close" id="winClose" aria-label="Close">×</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="fc-body">
+    <main class="main fc-main">
+      <section id="view-launchpad" class="view active">
+        <div class="fc-dash dashboard nx-play" id="homeShell">
+          <article class="nx-hero">
+            <div class="nx-hero-bg" aria-hidden="true"></div>
+            <div class="nx-hero-tools">
+              <button class="nx-tool" id="openLaunchLogHome" type="button" title="Console">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M7 10l3 2-3 2M12 14h5"/></svg>
+              </button>
+            </div>
+            <div class="nx-hero-center">
+              <h2 id="heroVersionTitle">Minecraft 1.21.11</h2>
+              <button class="nx-change-ver" id="switchVersionBtn" type="button">Change Version</button>
+              <p class="compat-hidden" id="heroPlayerName">Player</p>
+              <div class="fc-meta-row dash-pills compat-hidden">
+                <span class="meta-pill" id="pillVersion">1.21.11</span>
+                <span class="meta-pill" id="pillLoader">Fabric</span>
+                <span class="meta-pill" id="pillJava">Java 21+</span>
+                <span class="meta-pill" id="pillRam">4GB</span>
+                <span class="meta-pill dash-status" id="onlinePill" hidden></span>
+              </div>
+            </div>
+            <button class="host-home-chip" id="hostHomeChip" type="button" data-view="host" hidden>
+              <i></i><span id="hostHomeChipText">Hosting</span>
+            </button>
+            <div class="nx-skin-slot" aria-hidden="true">
+              <div class="dash-skin-wrap">
+                <div class="home-skin" id="skinStage">
+                  <canvas id="skinCanvas" aria-label="Player skin"></canvas>
+                  <img id="skinBody" class="skin-body-fallback" alt="" draggable="false" hidden />
+                  <div class="skin-fallback avatar xl" id="skinStageAvatar">P</div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <div class="nx-launch-wrap">
+            <button class="btn-play" id="launchBtn" type="button">
+              <span class="play-ico" aria-hidden="true"></span>
+              <span class="play-spinner" aria-hidden="true"></span>
+              <span id="launchBtnLabel">LAUNCH FABRIC</span>
+              <span class="play-bar" aria-hidden="true"><i class="play-bar-fill" id="playProgressFill"></i></span>
+            </button>
+            <p class="dash-play-sub compat-hidden" id="launchStageText">Minecraft <span id="launchBtnSub">1.21.11</span></p>
+            <div class="launch-status idle" id="launchStatus">
+              <div class="status-row">
+                <span id="statusText">Ready to play</span>
+                <span id="statusPct"></span>
+              </div>
+              <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+            </div>
+            <div class="update-banner hidden" id="updateBanner">
+              <div>
+                <strong>Update available</strong>
+                <span id="updateBannerText">A newer launcher is ready.</span>
+              </div>
+              <button class="btn btn-sm" id="updateDownloadBtn" type="button">Download</button>
+            </div>
+          </div>
+
+          <div class="nx-bottom">
+            <section class="nx-panel nx-news-panel">
+              <div class="side-head">
+                <h3>Latest news from Nitro Client</h3>
+              </div>
+              <div class="home-news" id="homeNews"></div>
+            </section>
+            <section class="nx-panel nx-friends-panel">
+              <div class="side-head">
+                <h3>Friends</h3>
+                <button class="text-link" data-view="friends" type="button">View more</button>
+              </div>
+              <div class="home-friends" id="homeFriendsList"></div>
+            </section>
+          </div>
+
+          <div class="compat-hidden" aria-hidden="true">
+            <button class="btn btn-sm btn-glass" id="focusSkinBtn" type="button">Skins</button>
+            <button class="btn btn-sm btn-glass" id="openClientFolderHome" type="button">Folder</button>
+            <img class="user-head lg-head" id="dashAvatarImg" src="" alt="" hidden />
+            <div class="avatar lg" id="dashAvatar">P</div>
+            <div class="home-partners" id="homePartnerList"></div>
+          </div>
+
+          <aside class="compat-hidden" aria-hidden="true">
+            <button type="button" id="smpCard" data-host="nitrosmp.lol"></button>
+            <i class="dot" id="smpDot"></i>
+            <span id="smpLive"></span>
+            <p id="smpStatusText"></p>
+            <span id="smpMeta"></span>
+            <span id="smpPing"></span>
+            <span id="smpMotd"></span>
+            <button id="joinSmpBtn" type="button"></button>
+            <button id="viewAllServersBtn" type="button"></button>
+            <div id="heroFeatures"></div>
+          </aside>
+
+          <p class="splash compat-hidden" id="splashText" aria-hidden="true"></p>
+          <span id="selectedLabel" class="compat-hidden">Nitro Modern</span>
+          <span id="selectedHint" class="compat-hidden">1.21.11</span>
+          <span id="profileBadge" class="compat-hidden">NITRO</span>
+
+          <div class="compat-hidden" aria-hidden="true">
+            <span id="metaVersion"></span>
+            <span id="dockVerPill">1.21.11</span>
+            <div id="partnerList"></div>
+            <div id="serverHubGrid"></div>
+            <div id="serverHub"><span id="lastServerLabel"></span></div>
+            <span id="smpCredit"></span>
+            <div id="homeUpdates"></div>
+            <div id="newsPanel"><div id="newsList"></div></div>
+            <span id="launcherVersionLabel">v2.6.7</span>
+            <button id="playSmpBtn" type="button"></button>
+            <button id="launchSoloBtn" type="button"></button>
+            <button id="copyIpBtn" type="button"></button>
+            <button id="openMcFolder" type="button"></button>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-versions" class="view page">
+        <header class="page-hero">
+          <div>
+            <h2>Versions</h2>
+            <p>Pick your Minecraft version and loader.</p>
+          </div>
+          <button class="btn btn-sm btn-accent" id="profilesFocusSearch" type="button">Browse</button>
+        </header>
+        <input type="search" id="versionSearch" class="search" placeholder="Search versions…" />
+        <div class="ver-grid" id="versionGrid"></div>
+        <button class="btn btn-secondary btn-lg back-home" data-view="launchpad" type="button">Back to Home</button>
+      </section>
+
+      <section id="view-mods" class="view page">
+        <header class="page-hero">
+          <div>
+            <h2>Mods</h2>
+            <p>Browse Modrinth and install directly into your profile.</p>
+          </div>
+          <button class="btn btn-sm btn-glass" id="openModsFolderBtn" type="button">Open mods folder</button>
+        </header>
+        <div class="mods-toolbar">
+          <input type="search" id="modSearch" class="search" placeholder="Search Modrinth…" />
+          <span class="mods-hint" id="modsProfileHint">Fabric · 1.21.11</span>
+        </div>
+        <div class="mod-grid" id="modGrid"></div>
+        <div class="installed-mods glass">
+          <h3>Installed mods</h3>
+          <ul id="installedModList" class="installed-list"></ul>
+        </div>
+      </section>
+
+      <section id="view-friends" class="view friends-view">
+        <div class="friends-app">
+          <header class="friends-hero">
+            <div class="friends-hero-copy">
+              <span class="friends-kicker">Social</span>
+              <h2>Friends</h2>
+              <p>Find Nitro players, add them, and share the server you’re hopping on.</p>
+            </div>
+            <div class="friends-hero-side">
+              <div class="friends-online-pill" id="friendsOnlinePill"><i class="dot on"></i>0 online</div>
+              <div class="friends-you" id="friendsYouCard"></div>
+            </div>
+          </header>
+
+          <div class="friends-search-wrap">
+            <div class="friends-search-row">
+              <span class="friends-search-ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.2-3.2"/></svg>
+              </span>
+              <input type="search" id="friendSearch" class="friends-search-input" placeholder="Search a username…" maxlength="16" autocomplete="off" />
+              <button class="friends-search-btn" id="friendSearchBtn" type="button">Search</button>
+            </div>
+            <div class="friends-search-result" id="friendSearchResult" hidden></div>
+            <div class="friends-requests" id="friendRequests" hidden></div>
+          </div>
+
+          <div class="friends-layout">
+            <aside class="friends-list" id="friendsListPane">
+              <div class="friends-list-head">
+                <div class="friends-tabs" id="friendsTabs">
+                  <button type="button" class="active" data-friends-tab="all">All</button>
+                  <button type="button" data-friends-tab="online">Online</button>
+                  <button type="button" data-friends-tab="requests">Requests <span class="friends-tab-count" id="friendsRequestCount" hidden>0</span></button>
+                </div>
+              </div>
+              <div class="friends-list-scroll" id="friendsList"></div>
+            </aside>
+            <section class="friends-chat" id="friendsChatPane">
+              <header class="friends-chat-head" id="friendsChatHead">
+                <strong>Select a friend</strong>
+                <small>Add someone, then open a chat to share servers.</small>
+              </header>
+              <div class="friends-chat-log" id="friendsChatLog"></div>
+              <form class="friends-chat-form" id="friendsChatForm">
+                <input id="friendsChatInput" type="text" maxlength="400" placeholder="Message or paste a server IP…" disabled />
+                <button class="friends-send-btn" id="friendsChatSend" type="submit" disabled>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+                  <span>Send</span>
+                </button>
+              </form>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-skins" class="view skins-view">
+        <div class="skins-app">
+          <div class="skins-library">
+            <header class="skins-hero">
+              <span class="skins-kicker">Cosmetics</span>
+              <h2>Skins</h2>
+            </header>
+            <div class="skins-add-row">
+              <input id="skinsQuery" class="skins-query" type="text" maxlength="200" placeholder="Enter username or skin URL to add" autocomplete="off" />
+              <button class="skins-file-btn" id="skinsChooseFile" type="button">Choose File</button>
+            </div>
+            <div class="skins-grid" id="skinsGrid"></div>
+          </div>
+          <aside class="skins-inspector">
+            <div class="skins-meta">
+              <label>
+                <span>Name</span>
+                <input id="skinsNameInput" type="text" maxlength="40" placeholder="Skin name" />
+              </label>
+              <p class="skins-current" id="skinsCurrentLabel">Current Skin</p>
+            </div>
+            <div class="skins-type">
+              <span>Skin Type</span>
+              <div class="skins-type-toggle" id="skinsTypeToggle">
+                <button type="button" data-skin-model="classic">Classic</button>
+                <button type="button" data-skin-model="slim">Slim</button>
+              </div>
+            </div>
+            <div class="skins-preview-stage env-void" id="skinsPreviewStage">
+              <canvas id="skinsPreviewCanvas" aria-label="Selected skin"></canvas>
+              <img id="skinsPreviewBody" class="skin-body-fallback" alt="" draggable="false" hidden />
+              <div class="skin-fallback avatar xl" id="skinsPreviewFallback">P</div>
+            </div>
+            <div class="skins-inspector-foot">
+              <label class="skins-env">
+                <select id="skinsEnvSelect">
+                  <option value="void" selected>Void</option>
+                  <option value="panorama">Panorama</option>
+                  <option value="studio">Studio</option>
+                </select>
+              </label>
+              <button class="skins-apply-btn" id="skinsApplyBtn" type="button">Apply</button>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="view-accounts" class="view page">
+        <header class="page-hero">
+          <div>
+            <h2>Accounts</h2>
+            <p>Minecraft accounts — Microsoft or offline username.</p>
+          </div>
+          <button class="btn btn-sm btn-accent" id="addAccountBtn" type="button">+ Add account</button>
+        </header>
+
+        <h3 class="block-title">Active profile</h3>
+        <article class="acct-card glass" id="accountsActiveCard">
+          <div class="acct-left">
+            <img class="user-head lg-head" id="accountsAvatarImg" src="" alt="" hidden />
+            <div class="avatar lg" id="accountsAvatar">P</div>
+            <div>
+              <strong id="accountsName">Player</strong>
+              <div class="acct-meta">
+                <span class="ms-badge" id="accountsModeBadge">OFFLINE</span>
+                <span class="dim" id="accountsModeHint">Local username</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-sm" id="accountsGotoSettings" type="button">Edit</button>
+        </article>
+
+        <div class="panel glass profile-panel">
+          <h3 class="block-title">Login type</h3>
+          <div class="account-mode" id="accountMode">
+            <label class="account-option"><input type="radio" name="loginMode" value="offline" checked /><span>Offline</span></label>
+            <label class="account-option"><input type="radio" name="loginMode" value="microsoft" /><span>Microsoft</span></label>
+          </div>
+          <label class="account-drop-user profile-user-field" id="profileOfflineField">
+            <span>Offline username</span>
+            <input id="profileUsername" maxlength="16" placeholder="Username" spellcheck="false" autocomplete="off" />
+          </label>
+          <div id="microsoftPanel">
+            <p class="account-status" id="microsoftStatus">Not signed in</p>
+            <label class="setting-row">
+              <span class="setting-info"><strong>Remember login</strong><small>Encrypted on this PC.</small></span>
+              <span class="switch"><input type="checkbox" id="rememberMicrosoft" checked /><i></i></span>
+            </label>
+            <div class="security-panel" id="securityPanel">
+              <strong id="securityPanelTitle">Your account stays yours</strong>
+              <ul id="securityPanelList">
+                <li>Sign-in opens the official Microsoft page</li>
+                <li>Tokens stay on your computer only</li>
+                <li>Sign out anytime to remove saved login</li>
+              </ul>
+            </div>
+            <div class="row-actions">
+              <button class="btn btn-primary" id="microsoftLoginBtn" type="button">Sign in with Microsoft</button>
+              <button class="btn" id="microsoftLogoutBtn" type="button" hidden>Sign out</button>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-lg back-home" data-view="launchpad" type="button">Done</button>
+      </section>
+
+      <section id="view-partners" class="view servers-view">
+        <div class="servers-app">
+          <header class="servers-hero">
+            <div>
+              <span class="skins-kicker">Multiplayer</span>
+              <h2>Servers</h2>
+              <p>Official and partner servers — click one to launch and join.</p>
+            </div>
+          </header>
+          <div class="servers-grid" id="partnersPageList"></div>
+        </div>
+      </section>
+
+      <section id="view-host" class="view host-view">
+        <div class="host-app is-setup" id="hostApp">
+          <header class="host-top">
+            <div>
+              <span class="host-kicker">Multiplayer</span>
+              <h2>Host World</h2>
+              <p>Pick a save, host it for friends, then send them the invite.</p>
+            </div>
+            <div class="host-top-side">
+              <div class="host-live-pill is-off" id="hostStatusPill"><i></i><span>Offline</span></div>
+              <button class="host-create-btn" id="hostCreateToggle" type="button">+ Create world</button>
+            </div>
+          </header>
+
+          <nav class="host-steps" id="hostSteps" aria-label="How hosting works">
+            <div class="host-step is-on" data-step="1"><i>1</i><span>Pick a world</span></div>
+            <div class="host-step" data-step="2"><i>2</i><span>Host it</span></div>
+            <div class="host-step" data-step="3"><i>3</i><span>Invite friends</span></div>
+          </nav>
+
+          <form class="host-create-form" id="hostCreateForm">
+            <input id="hostCreateName" maxlength="40" placeholder="Name this world…" autocomplete="off" />
+            <button class="host-btn is-accent" id="hostCreateSave" type="submit">Create</button>
+          </form>
+
+          <div class="host-studio">
+            <aside class="host-col host-col-worlds">
+              <div class="host-col-head">
+                <h3>Worlds</h3>
+                <span id="hostWorldCount">0</span>
+              </div>
+              <div class="host-worlds" id="hostWorldList"></div>
+            </aside>
+
+            <section class="host-col host-col-stage">
+              <article class="host-stage" id="hostStage">
+                <div class="host-stage-art" id="hostSelectedThumb"></div>
+                <div class="host-stage-mark" aria-hidden="true">NITRO</div>
+                <div class="host-stage-copy">
+                  <small id="hostSelectedTag">Ready to host</small>
+                  <h3 id="hostSelectedName">Pick a world</h3>
+                  <p id="hostSelectedMeta">Create one or play singleplayer so Nitro can find your saves.</p>
+                </div>
+                <div class="host-guide host-only-setup">
+                  <div class="host-guide-item"><b>1</b><span>Choose a world</span></div>
+                  <div class="host-guide-item"><b>2</b><span>Set mode &amp; host</span></div>
+                  <div class="host-guide-item"><b>3</b><span>Invite friends</span></div>
+                </div>
+                <div class="host-live-banner host-only-live">
+                  <i></i>
+                  <div>
+                    <strong>Session is live</strong>
+                    <span>Uptime <b id="hostUptime">0:00</b></span>
+                  </div>
+                </div>
+                <div class="host-stage-controls">
+                  <label class="host-setting">
+                    <span>Mode</span>
+                    <select id="hostMode">
+                      <option value="survival">Survival</option>
+                      <option value="creative">Creative</option>
+                      <option value="adventure">Adventure</option>
+                    </select>
+                  </label>
+                  <button class="host-setting" id="hostCheatsBtn" type="button">
+                    <span>Allow Cheats</span>
+                    <i class="host-cheats" id="hostCheatsBox" aria-hidden="true">
+                      <svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>
+                    </i>
+                  </button>
+                </div>
+                <div class="host-stage-actions">
+                  <button class="host-btn is-accent host-only-setup" id="hostStartBtn" type="button">
+                    <svg viewBox="0 0 24 24"><path d="M8 6l12 6-12 6z" fill="currentColor" stroke="none"/></svg>
+                    Host world
+                  </button>
+                  <button class="host-btn is-accent host-only-live" id="hostPlayBtn" type="button">
+                    <svg viewBox="0 0 24 24"><path d="M8 6l12 6-12 6z" fill="currentColor" stroke="none"/></svg>
+                    Play
+                  </button>
+                  <button class="host-btn host-only-live" id="hostCopyBtn" type="button">Copy invite</button>
+                  <button class="host-btn is-danger host-only-live" id="hostStopBtn" type="button">Stop</button>
+                </div>
+              </article>
+
+              <div class="host-metrics" id="hostMetrics">
+                <div class="host-stat">
+                  <label>World</label>
+                  <b id="hostStatWorld">—</b>
+                </div>
+                <div class="host-stat">
+                  <label>Players</label>
+                  <b id="hostStatPlayers">0/8</b>
+                  <i class="host-stat-bar"><em id="hostStatPlayersBar"></em></i>
+                </div>
+                <div class="host-stat">
+                  <label>CPU</label>
+                  <b id="hostStatCpu">—</b>
+                  <i class="host-stat-bar"><em id="hostStatCpuBar"></em></i>
+                </div>
+                <div class="host-stat">
+                  <label>RAM</label>
+                  <b id="hostStatRam">—</b>
+                  <i class="host-stat-bar"><em id="hostStatRamBar"></em></i>
+                </div>
+                <div class="host-stat">
+                  <label>Network in</label>
+                  <b id="hostStatNetIn">—</b>
+                </div>
+                <div class="host-stat">
+                  <label>Network out</label>
+                  <b id="hostStatNetOut">—</b>
+                </div>
+              </div>
+            </section>
+
+            <aside class="host-col host-col-social">
+              <div class="host-panel host-ticket">
+                <h3>Join ticket</h3>
+                <div class="host-join">
+                  <div class="host-join-row">
+                    <div>
+                      <span>Address</span>
+                      <code id="hostJoinAddress">Offline</code>
+                    </div>
+                    <button type="button" class="host-mini" id="hostCopyAddress">Copy</button>
+                  </div>
+                  <div class="host-join-row">
+                    <div>
+                      <span>Invite code</span>
+                      <code id="hostJoinCode">—</code>
+                    </div>
+                    <button type="button" class="host-mini" id="hostCopyCode">Copy</button>
+                  </div>
+                </div>
+                <p class="host-note" id="hostProviderNote">Host a world to generate an invite code.</p>
+              </div>
+              <div class="host-panel host-panel-friends">
+                <h3>Invite friends</h3>
+                <div class="host-friends" id="hostFriendsList"></div>
+              </div>
+            </aside>
+          </div>
+
+          <div class="host-overlay is-start" id="hostStartOverlay">
+            <div class="host-loader">
+              <div class="host-spin" aria-hidden="true"></div>
+              <strong>Starting world</strong>
+              <p id="hostStartLine">Preparing…</p>
+              <div class="host-bar"><i id="hostStartBar"></i></div>
+            </div>
+          </div>
+          <div class="host-overlay is-stop" id="hostStopOverlay">
+            <div class="host-confirm">
+              <strong>Stop hosting?</strong>
+              <p>Friends will lose this session. You can host the world again anytime.</p>
+              <div class="host-stage-actions">
+                <button class="host-btn" id="hostStopCancel" type="button">Keep hosting</button>
+                <button class="host-btn is-danger" id="hostStopConfirm" type="button">Stop</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-owner" class="view page owner-only hidden">
+        <header class="page-hero">
+          <div>
+            <h2>Owner Live Config</h2>
+            <p>Edit partners, news, and changelog. Publish so every Nitro Client updates without a new build.</p>
+          </div>
+          <div class="row-actions">
+            <button class="btn" id="ownerReloadBtn" type="button">Reload</button>
+            <button class="btn" id="ownerSaveBtn" type="button">Save draft</button>
+            <button class="btn" id="ownerExportBtn" type="button">Export JSON</button>
+            <button class="btn btn-accent" id="ownerPublishBtn" type="button">Publish</button>
+          </div>
+        </header>
+
+        <div class="owner-status" id="ownerStatus">Not loaded</div>
+
+        <div class="owner-grid">
+          <div class="panel">
+            <h3>Publish target</h3>
+            <label class="owner-field">
+              <span>Publish URL</span>
+              <input id="ownerPublishUrl" type="url" placeholder="https://nitrosmp.lol/api/nitro-launcher.json" />
+            </label>
+            <label class="owner-field">
+              <span>Publish token (optional)</span>
+              <input id="ownerPublishToken" type="password" autocomplete="off" placeholder="Bearer / host token" />
+            </label>
+            <p class="note">Public clients read <code>remoteMetaUrl</code> from launcher-meta. Upload the same JSON there (or export and upload manually).</p>
+          </div>
+
+          <div class="panel">
+            <div class="side-head">
+              <h3>Partners</h3>
+              <button class="btn btn-sm" id="ownerAddPartnerBtn" type="button">Add partner</button>
+            </div>
+            <div id="ownerPartnerEditor" class="owner-list"></div>
+          </div>
+
+          <div class="panel">
+            <div class="side-head">
+              <h3>News</h3>
+              <button class="btn btn-sm" id="ownerAddNewsBtn" type="button">Add news</button>
+            </div>
+            <div id="ownerNewsEditor" class="owner-list"></div>
+          </div>
+
+          <div class="panel">
+            <div class="side-head">
+              <h3>Changelog</h3>
+              <button class="btn btn-sm" id="ownerAddChangelogBtn" type="button">Add version</button>
+            </div>
+            <div id="ownerChangelogEditor" class="owner-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-settings" class="view page">
+        <header class="page-hero">
+          <div>
+            <h2>Settings</h2>
+            <p>Launcher preferences.</p>
+          </div>
+        </header>
+
+        <div class="settings-split">
+          <nav class="settings-side" id="settingsRail">
+            <button type="button" class="side-item active" data-cat="account"><strong>General</strong></button>
+            <button type="button" class="side-item" data-cat="performance"><strong>Performance</strong></button>
+            <button type="button" class="side-item" data-cat="minecraft"><strong>Storage</strong></button>
+            <button type="button" class="side-item" data-cat="downloads"><strong>Support</strong></button>
+            <button type="button" class="side-item" data-cat="graphics"><strong>Appearance</strong></button>
+            <button type="button" class="side-item" data-cat="launcher"><strong>Backup</strong></button>
+            <button type="button" class="side-item" data-cat="experimental"><strong>Experimental</strong></button>
+          </nav>
+
+          <div class="settings-main" id="settingsContent">
+            <div class="settings-section" data-cat="account">
+              <div class="panel">
+                <h3>General</h3>
+                <p class="note">Account mode and identity.</p>
+                <div class="row-actions">
+                  <button class="btn" id="settingsOpenAccounts" type="button">Open Accounts</button>
+                </div>
+              </div>
+              <div class="panel">
+                <h3>Spotify</h3>
+                <p class="note" id="spotifyStatusText">Connect via official Spotify login (optional).</p>
+                <label class="owner-field">
+                  <span>Spotify Client ID</span>
+                  <input id="spotifyClientIdInput" type="text" placeholder="From developer.spotify.com/dashboard" autocomplete="off" />
+                </label>
+                <div class="row-actions">
+                  <button class="btn btn-accent" id="spotifyConnectBtn" type="button">Connect Spotify</button>
+                  <button class="btn" id="spotifySaveIdBtn" type="button">Save Client ID</button>
+                  <button class="btn" id="spotifyDisconnectBtn" type="button" hidden>Disconnect</button>
+                  <button class="btn" id="spotifyOpenDashboardBtn" type="button">Open Dashboard</button>
+                </div>
+                <div class="nx-spotify-now" id="spotifyNowPlaying" hidden>
+                  <img id="spotifyAlbumArt" alt="" />
+                  <div>
+                    <strong id="spotifyTrackName">—</strong>
+                    <small id="spotifyArtistName">—</small>
+                  </div>
+                </div>
+                <div class="row-actions" id="spotifyControls" hidden>
+                  <button class="btn btn-sm" id="spotifyPrevBtn" type="button">Previous</button>
+                  <button class="btn btn-sm btn-accent" id="spotifyPlayPauseBtn" type="button">Play/Pause</button>
+                  <button class="btn btn-sm" id="spotifyNextBtn" type="button">Next</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-section" data-cat="graphics" hidden>
+              <div class="panel">
+                <h3>Appearance</h3>
+                <label class="setting-row">
+                  <span class="setting-info"><strong>Animated background</strong><small>Panorama video backdrop.</small></span>
+                  <span class="switch"><input type="checkbox" id="bgVideoToggle" /><i></i></span>
+                </label>
+                <label class="setting-row">
+                  <span class="setting-info"><strong>Reduce motion</strong><small>Minimize transitions.</small></span>
+                  <span class="switch"><input type="checkbox" id="reduceMotionToggle" /><i></i></span>
+                </label>
+                <p class="dim">Nitro uses a fixed dark navy + electric blue look.</p>
+                <div class="row-actions compat-hidden" aria-hidden="true">
+                  <button class="btn" id="openThemeFromSettings" type="button">Theme…</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-section" data-cat="launcher" hidden>
+              <div class="panel">
+                <h3>Backup</h3>
+                <div class="row-actions">
+                  <button class="btn" id="exportSettingsBtn" type="button">Export</button>
+                  <button class="btn" id="importSettingsBtn" type="button">Import</button>
+                </div>
+              </div>
+              <div class="panel">
+                <h3>Changelog</h3>
+                <div class="changelog-list" id="changelogList"></div>
+              </div>
+            </div>
+
+            <div class="settings-section" data-cat="minecraft" hidden>
+              <div class="panel">
+                <h3>Memory</h3>
+                <p class="note">RAM allocated to Minecraft.</p>
+                <div class="ram-row">
+                  <input type="range" id="memorySlider" min="2048" max="8192" step="512" value="4096" />
+                  <input type="number" id="memoryInput" min="1024" max="16384" step="512" value="4096" />
+                  <span>MB</span>
+                </div>
+                <div class="row-actions">
+                  <button class="btn" id="openClientFolder" type="button">Open client folder</button>
+                </div>
+              </div>
+              <div class="panel" data-nitro-only>
+                <h3>Resource pack</h3>
+                <p class="note" id="resourcePackLabel">Optional pack on launch.</p>
+                <div class="row-actions">
+                  <button class="btn" id="pickResourcePackBtn" type="button">Choose pack</button>
+                  <button class="btn" id="applyResourcePackBtn" type="button">Install now</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-section" data-cat="performance" hidden>
+              <div class="panel" data-nitro-only>
+                <h3>Gameplay preset</h3>
+                <div class="preset-grid" id="presetGrid"></div>
+                <label class="setting-row">
+                  <span class="setting-info"><strong>Performance mode</strong><small>FPS-focused tweaks.</small></span>
+                  <span class="switch"><input type="checkbox" id="performanceMode" /><i></i></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="settings-section" data-cat="downloads" hidden>
+              <div class="panel" id="javaSetupCard" data-nitro-only>
+                <h3>Java setup</h3>
+                <p class="note" id="javaSetupStatus">Checking Java…</p>
+                <div class="row-actions">
+                  <button class="btn" id="setupJavaBtn" type="button">Download Java 8</button>
+                </div>
+              </div>
+              <div class="panel" data-nitro-only>
+                <h3>Maintenance</h3>
+                <div class="row-actions">
+                  <button class="btn" id="repairBtn" type="button">Repair install</button>
+                  <button class="btn" id="openLaunchLogBtn" type="button">Open launch log</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-section" data-cat="experimental" hidden>
+              <div class="panel" data-nitro-only>
+                <h3>Module toggles</h3>
+                <div class="mod-toggle-grid" id="modToggleGrid"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-lg back-home" data-view="launchpad" type="button">Done</button>
+      </section>
+    </main>
+    </div>
+
+    <footer class="footer glass">
+      <div class="footer-left">
+        <img src="assets/icon.png" alt="" class="footer-mark" />
+        <span class="footer-ver">Nitro Client v<span id="footerVersion">2.6.7</span></span>
+      </div>
+      <div class="footer-right">
+        <span id="footerProfile" class="compat-hidden"></span>
+        <span id="footerMc">1.21.11</span>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="overlay hidden" id="updateUnlock">
+    <div class="modal">
+      <img src="assets/icon.png" alt="" />
+      <p class="kicker">Unlocked</p>
+      <h2 id="updateUnlockTitle">Congrats!</h2>
+      <p id="updateUnlockText">You unlocked updates</p>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="themeModal">
+    <div class="modal wide">
+      <header class="modal-head">
+        <strong>Theme</strong>
+        <button id="themeModalClose" type="button" aria-label="Close">×</button>
+      </header>
+      <input type="search" id="themeSearch" class="search" placeholder="Search…" />
+      <p class="dim" id="themeCount">Themes (5)</p>
+      <div class="theme-grid" id="themeGrid"></div>
+      <footer class="modal-foot">
+        <span>Active: <b id="themeActiveLabel">Jungle</b></span>
+        <button class="btn btn-sm" id="themeResetBtn" type="button">Reset</button>
+      </footer>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="javaWizard">
+    <div class="modal">
+      <img src="assets/icon.png" alt="" />
+      <h2>Java 8 required</h2>
+      <p>Nitro 1.8.9 needs Java 8.</p>
+      <div class="row-actions center">
+        <button class="btn btn-secondary" id="javaWizardSkip" type="button">Skip</button>
+        <button class="btn btn-primary" id="javaWizardInstall" type="button">Download Java 8</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="onboarding">
+    <div class="modal">
+      <img src="assets/icon.png" alt="" />
+      <h2>Welcome</h2>
+      <p>Set your username, then hit Play.</p>
+      <label class="account-drop-user">
+        <span>Username</span>
+        <input id="onboardingUsername" maxlength="16" placeholder="Username" spellcheck="false" autocomplete="off" />
+      </label>
+      <button class="btn btn-primary btn-lg" id="onboardingDone" type="button">Continue</button>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="consoleModal">
+    <div class="modal wide console-modal">
+      <header class="modal-head">
+        <div>
+          <strong>Launch console</strong>
+          <p class="dim console-sub">Downloads, mod loading, and startup output — read only</p>
+        </div>
+        <button id="consoleModalClose" type="button" aria-label="Close">×</button>
+      </header>
+      <pre class="console-log" id="consoleLog" aria-live="polite">Loading log…</pre>
+      <footer class="modal-foot console-foot">
+        <button class="btn btn-sm btn-glass" id="consoleRefreshBtn" type="button">Refresh</button>
+        <button class="btn btn-sm btn-glass" id="consoleClearBtn" type="button">Clear</button>
+        <button class="btn btn-sm btn-glass" id="consoleOpenFileBtn" type="button">Open log file</button>
+        <button class="btn btn-sm btn-primary" id="consoleCloseBtn" type="button">Close</button>
+      </footer>
+    </div>
+  </div>
+
+  <script src="node_modules/skinview3d/bundles/skinview3d.bundle.js"></script>
+  <script src="boot-splash.js"></script>
+  <script src="skin-preview.js"></script>
+  <script src="nitro-bg.js"></script>
+  <script src="renderer.js"></script>
+  <script src="hosting-ui.js"></script>
+</body>
+</html>

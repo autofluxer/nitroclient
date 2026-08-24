@@ -1,0 +1,11 @@
+{
+  "providers": [
+    {
+      "type": "bitmap",
+      "file": "nitro:font/nitro_tab_icon.png",
+      "ascent": 8,
+      "height": 8,
+      "chars": ["\uA100"]
+    }
+  ]
+}

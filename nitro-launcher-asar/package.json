@@ -1,0 +1,61 @@
+{
+  "name": "nitroclient",
+  "version": "2.6.7",
+  "description": "Nitro Client — Minecraft Client Launcher",
+  "main": "main.js",
+  "author": "Nitro Client",
+  "scripts": {
+    "start": "electron .",
+    "dist": "node scripts/set-owner-build.js 0 && node scripts/set-video-build.js 0 && electron-builder --win portable",
+    "dist:owner": "node scripts/set-video-build.js 0 && node scripts/set-owner-build.js 1 && electron-builder --win portable -c.productName=\"Nitro Owner\" -c.appId=\"com.nitroclient.owner\" -c.portable.artifactName=\"Nitro Owner.exe\" && node scripts/set-owner-build.js 0",
+    "dist:video": "node scripts/set-owner-build.js 0 && node scripts/set-video-build.js 1 && electron-builder --win portable -c.productName=\"Nitro Client\" -c.appId=\"com.nitroclient.motion\" -c.portable.artifactName=\"Nitro Client.exe\" && node scripts/set-video-build.js 0"
+  },
+  "dependencies": {
+    "discord-rpc": "^4.0.1",
+    "minecraft-launcher-core": "^3.18.2",
+    "msmc": "^5.0.5",
+    "skinview3d": "^3.0.1",
+    "three": "^0.160.0"
+  },
+  "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.nitroclient.launcher",
+    "productName": "Nitro Client",
+    "directories": {
+      "output": "dist-exe"
+    },
+    "icon": "assets/icon.ico",
+    "files": [
+      "**/*",
+      "!dist-exe/**",
+      "!node_modules/.cache/**",
+      "!game-121/**",
+      "!_asar*/**",
+      "!dist-build.log"
+    ],
+    "extraResources": [
+      {
+        "from": "game-121",
+        "to": "game-121"
+      }
+    ],
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "signAndEditExecutable": false
+    },
+    "portable": {
+      "artifactName": "Nitro Client.exe"
+    }
+  }
+}

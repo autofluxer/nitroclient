@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400" fill="none">
+  <rect width="640" height="400" fill="#0a0c10"/>
+  <g opacity="0.9" stroke="#3B82F6" stroke-width="1.4" fill="rgba(59,130,246,0.06)">
+    <path d="M420 70l70 40v80l-70 40-70-40V110l70-40z"/>
+    <path d="M420 70l70 40-70 40-70-40 70-40z" fill="rgba(59,130,246,0.1)"/>
+    <path d="M280 150l55 32v64l-55 32-55-32v-64l55-32z"/>
+    <path d="M280 150l55 32-55 32-55-32 55-32z" fill="rgba(59,130,246,0.08)"/>
+    <path d="M500 180l90 52v104l-90 52-90-52V232l90-52z"/>
+    <path d="M500 180l90 52-90 52-90-52 90-52z" fill="rgba(59,130,246,0.07)"/>
+    <path d="M160 220l48 28v56l-48 28-48-28v-56l48-28z"/>
+    <path d="M160 220l48 28-48 28-48-28 48-28z" fill="rgba(59,130,246,0.09)"/>
+    <path d="M360 240l40 23v46l-40 23-40-23v-46l40-23z"/>
+    <path d="M360 240l40 23-40 23-40-23 40-23z" fill="rgba(59,130,246,0.1)"/>
+  </g>
+  <defs>
+    <radialGradient id="g" cx="70%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="rgba(59,130,246,0.22)"/>
+      <stop offset="100%" stop-color="rgba(10,12,16,0)"/>
+    </radialGradient>
+  </defs>
+  <rect width="640" height="400" fill="url(#g)"/>
+</svg>
